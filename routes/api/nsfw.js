@@ -27,7 +27,7 @@ router.get("/", (req, res) => {
 			jsonData = {
 				code: 200,
 				time: `${new Date() - start}ms`,
-				data: [{ url: fileUrl, type: fileUrl.split(".").pop(), category: category }],
+				data: { url: fileUrl, type: fileUrl.split(".").pop(), category: category },
 			};
 			res.json(jsonData);
 		}
