@@ -3,7 +3,7 @@ const express = require("express");
 const router = asyncify(express.Router());
 
 router.get("/", async (req, res) => {
-	res.send("Hello World!");
+	res.render("index");
 });
 
 module.exports = router;
