@@ -78,6 +78,8 @@ router.get("/", (req, res) => {
 	}
 
 	const url = `https://youtube.com/watch?v=${id}`;
+	console.log(`[ytdl] ${url} requested.`);
+
 	const options = {
 		output: path.join(rootPath, "data", "ytdl", "%(id)s.%(ext)s"),
 		noWarnings: true,
@@ -124,6 +126,7 @@ router.get("/", (req, res) => {
 		if (filePath !== undefined) {
 			filePath = path.basename(filePath);
 
+			console.log(`[ytdl] ${filePath} downloaded.`);
 			return res.status(200).json({
 				code: 200,
 				time: `${new Date() - start}ms`,
