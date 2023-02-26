@@ -83,7 +83,6 @@ router.get("/", (req, res) => {
 	const options = {
 		output: path.join(rootPath, "data", "ytdl", "%(id)s.%(ext)s"),
 		noWarnings: true,
-		embedThumbnail: true,
 		// quiet: true,
 	};
 	filetype === "audio"
