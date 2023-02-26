@@ -69,6 +69,8 @@ router.get("/", (req, res) => {
 		});
 	}
 
+	const url = `https://youtube.com/watch?v=${id}`;
+
 	if (fs.existsSync(path.join(rootPath, "data", "ytdl", `${id}.${filetype === "audio" ? "mp3" : "mp4"}`))) {
 		console.log(`[ytdl] ${url} requested as ${filetype}. (cached)`);
 		return res.status(200).json({
@@ -78,7 +80,6 @@ router.get("/", (req, res) => {
 		});
 	}
 
-	const url = `https://youtube.com/watch?v=${id}`;
 	console.log(`[ytdl] ${url} requested as ${filetype}.`);
 
 	const options = {
