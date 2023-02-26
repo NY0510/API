@@ -81,9 +81,12 @@ router.get("/", (req, res) => {
 	const options = {
 		output: path.join(rootPath, "data", "ytdl", "%(id)s.%(ext)s"),
 		noWarnings: true,
+		embedThumbnail: true,
 		// quiet: true,
 	};
-	filetype === "audio" ? ((options.extractAudio = true), (options.audioFormat = "mp3")) : (options.format = "bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4");
+	filetype === "audio"
+		? ((options.extractAudio = true), (options.audioFormat = "mp3"), (options.audioQuality = 0))
+		: (options.format = "bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4");
 
 	const subprocess = ytdlp.exec(url, options);
 	subprocess.on("error", error => {
@@ -98,20 +101,24 @@ router.get("/", (req, res) => {
 		const text = data.toString();
 		let filePath;
 
-		console.log(text);
+		// console.log(text);
 
-		if (text.includes("[ExtractAudio]") || filetype === "video") {
-			text.split(" /")
-				.filter((item, index) => index === 1)
-				.forEach(item => {
-					filePath = "/" + item.split(";")[0].trim();
-				});
-		} else if (text.includes("[download]")) {
-			text.split(" /")
-				.filter((item, index) => index === 1)
-				.forEach(item => {
-					if (item.includes("mp4")) filePath = "/" + item.split(" has")[0].trim();
-				});
+		if (filetype === "audio") {
+			if (text.includes("[ExtractAudio]")) {
+				text.split(" /")
+					.filter((item, index) => index === 1)
+					.forEach(item => {
+						filePath = "/" + item.split(";")[0].trim();
+					});
+			}
+		} else if (filetype === "video") {
+			if (text.includes("[Merger]")) {
+				text.split(' "/')
+					.filter((item, index) => index === 1)
+					.forEach(item => {
+						if (item.includes("mp4")) filePath = "/" + item.split('"')[0].trim();
+					});
+			}
 		}
 
 		if (filePath !== undefined) {
