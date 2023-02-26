@@ -78,7 +78,7 @@ router.get("/", (req, res) => {
 	}
 
 	const url = `https://youtube.com/watch?v=${id}`;
-	console.log(`[ytdl] ${url} requested.`);
+	console.log(`[ytdl] ${url} requested as ${filetype}.`);
 
 	const options = {
 		output: path.join(rootPath, "data", "ytdl", "%(id)s.%(ext)s"),
