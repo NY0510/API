@@ -70,6 +70,7 @@ router.get("/", (req, res) => {
 	}
 
 	if (fs.existsSync(path.join(rootPath, "data", "ytdl", `${id}.${filetype === "audio" ? "mp3" : "mp4"}`))) {
+		console.log(`[ytdl] ${url} requested as ${filetype}. (cached)`);
 		return res.status(200).json({
 			code: 200,
 			time: `${new Date() - start}ms`,
@@ -129,7 +130,7 @@ router.get("/", (req, res) => {
 			return res.status(200).json({
 				code: 200,
 				time: `${new Date() - start}ms`,
-				data: { url: `http://api.ny64.kr/ytdl/download?file=${filePath}`, cached: false, expiration: 60 * 60 * 2 },
+				data: { url: `http://api.ny64.kr/ytdl/download?file=${filePath}`, cached: false, expiration: `${1000 * 60 * 60 * 2}ms` },
 			});
 		}
 	});
