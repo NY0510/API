@@ -98,14 +98,19 @@ router.get("/", (req, res) => {
 		const text = data.toString();
 		let filePath;
 
-		if (text.includes("[ExtractAudio]") || text.includes("[download]")) {
+		console.log(text);
+
+		if (text.includes("[ExtractAudio]") || filetype === "video") {
 			text.split(" /")
 				.filter((item, index) => index === 1)
 				.forEach(item => {
-					if (filetype === "audio") filePath = "/" + item.split(";")[0].trim();
-					else {
-						if (item.includes("mp4")) filePath = "/" + item.split(" has")[0].trim();
-					}
+					filePath = "/" + item.split(";")[0].trim();
+				});
+		} else if (text.includes("[download]")) {
+			text.split(" /")
+				.filter((item, index) => index === 1)
+				.forEach(item => {
+					if (item.includes("mp4")) filePath = "/" + item.split(" has")[0].trim();
 				});
 		}
 
