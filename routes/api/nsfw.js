@@ -17,19 +17,17 @@ router.get("/", (req, res) => {
 		const fileUrl = body.url;
 
 		if (error) {
-			jsonData = {
+			return res.status(500).json({
 				code: 500,
 				time: `${new Date() - start}ms`,
 				errorMessage: error,
-			};
-			res.json(jsonData);
+			});
 		} else {
-			jsonData = {
+			return res.status(200).json({
 				code: 200,
 				time: `${new Date() - start}ms`,
 				data: { url: fileUrl, type: fileUrl.split(".").pop(), category: category },
-			};
-			res.json(jsonData);
+			});
 		}
 	});
 });

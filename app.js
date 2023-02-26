@@ -1,5 +1,6 @@
 require("dotenv").config();
 require("colors");
+require("./lib/fileClean");
 const express = require("express");
 const app = express();
 const fs = require("fs");
