@@ -8,11 +8,8 @@ const ytdlp = require("youtube-dl-exec");
 
 const rootPath = path.dirname(require.main.filename);
 
-async function checkVideoId(id) {
-	const url = "http://img.youtube.com/vi/" + id + "/mqdefault.jpg";
-	const { status } = await fetch(url);
-	if (status === 404) return false;
-	return true;
+function checkVideoId(id) {
+	return /^[a-zA-Z0-9_-]{11}$/.test(id);
 }
 
 router.get("/download", (req, res) => {
@@ -62,7 +59,9 @@ router.get("/", (req, res) => {
 		});
 	}
 
-	if (checkVideoId(id)) {
+	// console.log(!checkVideoId(id));
+
+	if (!checkVideoId(id)) {
 		return res.status(400).json({
 			code: 400,
 			time: `${new Date() - start}ms`,
@@ -74,7 +73,7 @@ router.get("/", (req, res) => {
 		return res.status(200).json({
 			code: 200,
 			time: `${new Date() - start}ms`,
-			data: { url: `https://api.koreanbots.dev/ytdl/download?file=${id}.${filetype === "audio" ? "mp3" : "mp4"}`, cached: true },
+			data: { url: `https://api.ny64.kr/ytdl/download?file=${id}.${filetype === "audio" ? "mp3" : "mp4"}`, cached: true },
 		});
 	}
 
