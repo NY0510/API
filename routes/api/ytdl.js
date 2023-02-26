@@ -70,6 +70,14 @@ router.get("/", (req, res) => {
 		});
 	}
 
+	if (fs.existsSync(path.join(rootPath, "data", "ytdl", `${id}.${filetype === "audio" ? "mp3" : "mp4"}`))) {
+		return res.status(200).json({
+			code: 200,
+			time: `${new Date() - start}ms`,
+			data: { url: `https://api.koreanbots.dev/ytdl/download?file=${id}.${filetype === "audio" ? "mp3" : "mp4"}`, cached: true },
+		});
+	}
+
 	const url = `https://youtube.com/watch?v=${id}`;
 	const options = {
 		output: path.join(rootPath, "data", "ytdl", "%(id)s.%(ext)s"),
@@ -108,7 +116,7 @@ router.get("/", (req, res) => {
 			return res.status(200).json({
 				code: 200,
 				time: `${new Date() - start}ms`,
-				data: { url: `http://api.ny64.kr/ytdl/download?file=${filePath}`, expiration: 60 * 60 * 2 },
+				data: { url: `http://api.ny64.kr/ytdl/download?file=${filePath}`, cached: false, expiration: 60 * 60 * 2 },
 			});
 		}
 	});
