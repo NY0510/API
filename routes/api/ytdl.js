@@ -108,7 +108,7 @@ router.get("/", (req, res) => {
 			return res.status(200).json({
 				code: 200,
 				time: `${new Date() - start}ms`,
-				data: { url: `http://localhost/ytdl/download?file=${filePath}`, expiration: 60 * 60 * 2 },
+				data: { url: `http://api.ny64.kr/ytdl/download?file=${filePath}`, expiration: 60 * 60 * 2 },
 			});
 		}
 	});
