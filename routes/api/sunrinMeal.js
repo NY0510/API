@@ -38,6 +38,8 @@ router.get("/", async (req, res) => {
 		let mealOfDay = mealData[e].toString();
 		mealOfDay = mealOfDay.split("\n");
 
+		if (mealOfDay[0] == year) return false;
+
 		finalData.push(mealOfDay);
 	});
 
