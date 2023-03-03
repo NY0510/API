@@ -34,14 +34,35 @@ router.get("/", async (req, res) => {
 	// console.log(Object.keys(mealData).length);
 	let finalData = [];
 
-	Object.keys(mealData).forEach(e => {
-		let mealOfDay = mealData[e].toString();
-		mealOfDay = mealOfDay.split("\n");
+	// Object.keys(mealData).forEach(e => {
+	// 	let mealOfDay = mealData[e].toString();
+	// 	mealOfDay = mealOfDay.split("\n");
 
-		if (mealOfDay[0] == year) return false;
+	// 	if (mealOfDay[0] == year) return false;
 
-		finalData.push(mealOfDay);
-	});
+	// 	finalData.push(mealOfDay);
+	// });
+
+	for (let i = 1; i <= Object.keys(mealData).length; i++) {
+		let mealOfDay = mealData[i];
+		mealOfDay = mealOfDay?.split("\n");
+
+		let tempList = [];
+
+		mealOfDay?.forEach((e, index) => {
+			let characters = "1234567890./-*";
+			for (let i = 0; i < characters.length; i++) {
+				e = e.replaceAll(characters[i], "").replaceAll("()", "");
+			}
+			e.trim();
+
+			if (e !== "[중식]") tempList.push(e);
+		});
+
+		if (mealOfDay == null) break;
+
+		finalData.push(tempList);
+	}
 
 	return res.status(200).json({
 		code: 200,
