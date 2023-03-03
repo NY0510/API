@@ -39,7 +39,7 @@ router.get("/", async (req, res) => {
 		for (let i = 0; i < characters.length; i++) {
 			e = e.replaceAll(characters[i], "").replaceAll("()", "");
 		}
-		if (index !== 0) finalData.push(e);
+		if (e !== "[중식]") finalData.push(e);
 	});
 
 	return res.status(200).json({
