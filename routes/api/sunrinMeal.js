@@ -16,36 +16,35 @@ const getData = async (year, month, day) => {
 		month: month,
 		default: "급식이 없습니다",
 	});
-	return meal[day];
+	return meal;
 };
 
 router.get("/", async (req, res) => {
-	const { year, month, day } = req.query;
+	const { year, month } = req.query;
 	const start = new Date();
 
-	if (!year || !month || !day) {
+	if (!year || !month) {
 		return res.status(400).json({
 			code: 400,
 			errorMessage: "필수 파라미터가 누락되었습니다.",
 		});
 	}
 
-	const mealData = await getData(year, month, day).then(data => data.split("\n"));
+	const mealData = await getData(year, month);
+	// console.log(Object.keys(mealData).length);
 	let finalData = [];
 
-	mealData.forEach((e, index) => {
-		// 알레르기 표시 번호 제거
-		let characters = "1234567890./-*";
-		for (let i = 0; i < characters.length; i++) {
-			e = e.replaceAll(characters[i], "").replaceAll("()", "");
-		}
-		if (index !== 0) finalData.push(e);
+	Object.keys(mealData).forEach(e => {
+		let mealOfDay = mealData[e].toString();
+		mealOfDay = mealOfDay.split("\n");
+
+		finalData.push(mealOfDay);
 	});
 
 	return res.status(200).json({
 		code: 200,
 		time: `${new Date() - start}ms`,
-		data: { date: `${year}${month}${day}`, meal: finalData },
+		data: { date: `${year}${month}`, meal: finalData },
 	});
 });
 
