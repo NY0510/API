@@ -8,9 +8,9 @@ const ytdlp = require("youtube-dl-exec");
 
 const rootPath = path.dirname(require.main.filename);
 
-function checkVideoId(id) {
+const checkVideoId = id => {
 	return /^[a-zA-Z0-9_-]{11}$/.test(id);
-}
+};
 
 router.get("/download", (req, res) => {
 	const { file } = req.query;

@@ -24,6 +24,7 @@
 		"express-asyncify": "^1.1.0",
 		"find-remove": "^4.1.0",
 		"request": "^2.88.2",
+		"school-kr": "^3.1.2",
 		"youtube-dl-exec": "^2.3.0"
 	}
 }
