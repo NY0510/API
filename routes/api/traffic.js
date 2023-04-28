@@ -3,6 +3,7 @@ const express = require("express");
 const router = asyncify(express.Router());
 
 const fs = require("fs");
+const os = require("os");
 
 async function getNetworkUsage(interfaceName) {
 	try {
@@ -24,12 +25,13 @@ async function getNetworkUsage(interfaceName) {
 
 router.get("/", async (req, res) => {
 	const start = new Date();
+	const uptime = os.uptime();
 	const { receivedBytes, transmittedBytes } = await getNetworkUsage("ens18");
 
 	return res.status(200).json({
 		code: 200,
 		time: `${new Date() - start}ms`,
-		data: { rx: receivedBytes, tx: transmittedBytes, timeFrom: new Date() },
+		data: { rx: receivedBytes, tx: transmittedBytes, uptime: uptime },
 	});
 });
 
