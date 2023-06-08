@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
 
 	mealData.forEach((e, index) => {
 		// 알레르기 표시 번호 제거
-		let characters = "1234567890./-*";
+		let characters = "1234567890*";
 		for (let i = 0; i < characters.length; i++) {
 			e = e.replaceAll(characters[i], "").replaceAll("()", "");
 		}
