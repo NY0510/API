@@ -24,10 +24,10 @@ const getRandomElementFromSet = set => {
 const getWordList = async firstChar => {
 	if (wordListCache[firstChar]) return wordListCache[firstChar];
 
-	const url = `https://kkukowiki.kr/w/%EC%97%AD%EB%8C%80_%EB%8B%A8%EC%96%B4/%ED%95%9C%EA%B5%AD%EC%96%B4/${firstChar}`;
+	const url = `https://kkukowiki.kr/w/역대_단어/한국어/${firstChar}`;
 
 	try {
-		const response = await axios.get(url);
+		const response = await axios.get(encodeURI(url));
 
 		if (response.status === 200) {
 			const html = response.data;
@@ -46,6 +46,7 @@ const getWordList = async firstChar => {
 			return wordSet;
 		}
 	} catch (e) {
+		console.log(`Error: ${e.message}`);
 		return new Set();
 	}
 };
