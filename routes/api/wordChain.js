@@ -76,11 +76,7 @@ router.get("/nextWord", async (req, res) => {
 
 	const result = await getWordList(word);
 
-	return res.status(200).json({
-		code: 200,
-		time: `${new Date() - start}ms`,
-		data: { result: getRandomElementFromSet(result) },
-	});
+	return res.status(200).send(getRandomElementFromSet(result));
 });
 
 router.get("/check", async (req, res) => {
@@ -96,11 +92,7 @@ router.get("/check", async (req, res) => {
 
 	const result = await checkWord(word);
 
-	return res.status(200).json({
-		code: 200,
-		time: `${new Date() - start}ms`,
-		data: { result: result },
-	});
+	return res.status(200).send(result);
 });
 
 module.exports = router;
