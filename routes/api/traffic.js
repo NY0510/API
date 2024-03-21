@@ -26,7 +26,7 @@ async function getNetworkUsage(interfaceName) {
 router.get("/", async (req, res) => {
 	const start = new Date();
 	const uptime = os.uptime();
-	const { receivedBytes, transmittedBytes } = await getNetworkUsage("ens18");
+	const { receivedBytes, transmittedBytes } = await getNetworkUsage("eth0");
 
 	return res.status(200).json({
 		code: 200,

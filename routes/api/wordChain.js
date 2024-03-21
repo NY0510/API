@@ -3,96 +3,67 @@ const express = require("express");
 const router = asyncify(express.Router());
 
 const axios = require("axios");
-const cheerio = require("cheerio");
+const https = require("https");
 
-const wordListCache = {};
-const wordCache = {};
+const apiKey = "BFC8F9DD3CB16A71E9212836B9F1F18B";
+const baseUrl = `https://opendict.korean.go.kr/api/search?key=${apiKey}&advanced=y&sort=popular&type1=word&method=start&num=50&req_type=json&pos=1,2,6,21,22,17,8,5,21&letter_s=3&q=`;
+const httpsAgent = new https.Agent({
+	rejectUnauthorized: false,
+});
 
-const getRandomElementFromSet = set => {
-	const size = set.size;
-	const randomIndex = Math.floor(Math.random() * size);
-	let currentIndex = 0;
+async function search(query) {
+	const response = await axios.get(encodeURI(baseUrl + query), { httpsAgent });
+	const results = await response.data.channel.item;
+	let wordList = [];
 
-	for (const element of set) {
-		if (currentIndex === randomIndex) {
-			return element;
-		}
-		currentIndex++;
+	for (const item of results) {
+		let jsonData = { word: item.word.replace("-", ""), description: item.sense[0].definition, type: item.sense[0].pos };
+		wordList.push(jsonData);
 	}
-};
 
-const getWordList = async firstChar => {
-	if (wordListCache[firstChar]) return wordListCache[firstChar];
+	return wordList;
+}
 
-	const url = `https://kkukowiki.kr/w/역대_단어/한국어/${firstChar}`;
-
-	try {
-		const response = await axios.get(encodeURI(url));
-
-		if (response.status === 200) {
-			const html = response.data;
-			const $ = cheerio.load(html);
-			const table = $("table.sortable");
-			const rows = table.find("tr > td > a");
-			const wordSet = new Set();
-
-			rows.each((i, e) => {
-				let text = $(e).text();
-				if (text.length > 1) wordSet.add(text);
-			});
-
-			wordListCache[firstChar] = wordSet;
-
-			return wordSet;
-		}
-	} catch (e) {
-		console.log(`Error: ${e.message}`);
-		return new Set();
-	}
-};
-
-const checkWord = async word => {
-	if (wordCache[word]) return wordCache[word];
-
-	const firstChar = word.charAt(0);
-	const wordList = await getWordList(firstChar);
-	const result = wordList.has(word);
-
-	wordCache[word] = result;
-
-	return result;
-};
-
-router.get("/nextWord", async (req, res) => {
-	const { word } = req.query;
+router.get("/search", async (req, res) => {
+	const { query } = req.query;
 	const start = new Date();
 
-	if (!word) {
+	if (!query) {
 		return res.status(400).json({
 			code: 400,
 			errorMessage: "필수 파라미터가 누락되었습니다.",
 		});
 	}
 
-	const result = await getWordList(word);
+	let wordList = await search(query.slice(-1));
+	let ramdomItem = wordList[Math.floor(Math.random() * wordList.length)];
 
-	return res.status(200).send(getRandomElementFromSet(result));
+	return res.status(200).json({
+		code: 200,
+		time: `${new Date() - start}ms`,
+		data: ramdomItem === undefined ? {} : ramdomItem,
+	});
 });
 
 router.get("/check", async (req, res) => {
-	const { word } = req.query;
+	const { query } = req.query;
 	const start = new Date();
 
-	if (!word) {
+	if (!query) {
 		return res.status(400).json({
 			code: 400,
 			errorMessage: "필수 파라미터가 누락되었습니다.",
 		});
 	}
 
-	const result = await checkWord(word);
+	let wordList = await search(query);
+	let checkResult = wordList.find(item => item.word === query);
 
-	return res.status(200).send(result);
+	return res.status(200).json({
+		code: 200,
+		time: `${new Date() - start}ms`,
+		data: checkResult === undefined ? {} : checkResult,
+	});
 });
 
 module.exports = router;
