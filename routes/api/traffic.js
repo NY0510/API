@@ -9,7 +9,7 @@ async function getNetworkUsage(interfaceName) {
 	try {
 		const data = await fs.promises.readFile("/proc/net/dev", "utf8");
 		const lines = data.trim().split("\n");
-		const interfaceLine = lines.find(line => line.includes(interfaceName));
+		const interfaceLine = lines.find((line) => line.includes(interfaceName));
 		if (!interfaceLine) {
 			throw new Error(`Interface ${interfaceName} not found in /proc/net/dev`);
 		}
